@@ -89,12 +89,12 @@ def test_html_empty_module() -> None:
     mod = fromText('''
     """C{thing}"""
     ''', modname='module')
-    assert docstring2html(mod) == '<div>\n<p>\n<tt class="rst-docutils literal">thing</tt>\n</p>\n</div>'
+    assert docstring2html(mod) == '<div>\n<p>\n<tt class="rst-docutils rst-literal">thing</tt>\n</p>\n</div>'
 
     mod = fromText('''
     """My C{thing}."""
     ''', modname='module')
-    assert docstring2html(mod) == '<div>\n<p>My <tt class="rst-docutils literal">thing</tt>.</p>\n</div>'
+    assert docstring2html(mod) == '<div>\n<p>My <tt class="rst-docutils rst-literal">thing</tt>.</p>\n</div>'
 
     mod = fromText('''
     """

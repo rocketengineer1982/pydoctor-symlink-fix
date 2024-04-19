@@ -89,6 +89,8 @@ This is the last major release to support Python 3.7.
   order of class members and module/package members, the supported values are "alphabetical" or "source".
   The default behavior is to sort all members alphabetically.
 * Make sure the line number coming from ast analysis has precedence over the line of a ``ivar`` field.
+* Ensure that all docutils generated css classes have the ``rst-`` prefix, the base theme have been updated accordingly.
+* Fix compatibility issue with docutils 0.21.x
 
 pydoctor 23.9.1
 ^^^^^^^^^^^^^^^
