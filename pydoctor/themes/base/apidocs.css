@@ -253,7 +253,7 @@ ul ul ul ul ul ul ul {
 .fieldTable tr td.fieldArgContainer > code {
     /* we don't want word break for the types because we already add <wbr> tags inside the type HTML, and that should suffice. */
     word-break: normal;
-    display: inline-flex;
+    display: inline-block;
     flex-wrap: wrap;
 }
 

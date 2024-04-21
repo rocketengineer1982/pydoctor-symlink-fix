@@ -91,6 +91,8 @@ This is the last major release to support Python 3.7.
 * Make sure the line number coming from ast analysis has precedence over the line of a ``ivar`` field.
 * Ensure that all docutils generated css classes have the ``rst-`` prefix, the base theme have been updated accordingly.
 * Fix compatibility issue with docutils 0.21.x
+* Transform annotations to use python 3.10 style: ``typing.Union[x ,y]`` -> ``x | y``; ``typing.Optional[x]`` -> ``x | None``; ``typing.List[x]`` -> ``list[x]``.
+* Do not output useless parenthesis when colourizing subscripts. 
 
 pydoctor 23.9.1
 ^^^^^^^^^^^^^^^

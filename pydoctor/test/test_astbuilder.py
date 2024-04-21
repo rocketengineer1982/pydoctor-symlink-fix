@@ -115,9 +115,8 @@ def type2str(type_expr: Optional[ast.expr]) -> Optional[str]:
     if type_expr is None:
         return None
     else:
-        src = astutils.unparse(type_expr)
-        assert isinstance(src, str)
-        return src.strip()
+        from .epydoc.test_pyval_repr import color2
+        return color2(type_expr)
 
 def type2html(obj: model.Documentable) -> str:
     """
@@ -1394,6 +1393,31 @@ def test_unstring_annotation(systemcls: Type[model.System]) -> None:
     assert ann_str_and_line(mod.contents['b']) == ('str', 3)
     assert ann_str_and_line(mod.contents['c']) == ('list[Thingy]', 4)
 
+@systemcls_param
+def test_upgrade_annotation(systemcls: Type[model.System]) -> None:
+    """Annotations using old style Unions or Optionals are upgraded to python 3.10+ style. 
+    Deprecated aliases like List, Tuple Dict are also translated to their built ins versions.
+    """
+    mod = fromText('''\
+    from typing import Union, Optional, List
+    a: Union[str, int]
+    b: Optional[str]
+    c: List[B]
+    d: Optional[Union[str, int, bytes]]
+    e: Union[str]
+    f: Union[(str,)]
+    g: Optional[1, 2] # wrong, so we don't process it
+    h: Union[list[str]]
+    ''', systemcls=systemcls)
+    assert ann_str_and_line(mod.contents['a']) == ('str | int', 2)
+    assert ann_str_and_line(mod.contents['b']) == ('str | None', 3)
+    assert ann_str_and_line(mod.contents['c']) == ('list[B]', 4)
+    assert ann_str_and_line(mod.contents['d']) == ('str | int | bytes | None', 5)
+    assert ann_str_and_line(mod.contents['e']) == ('str', 6)
+    assert ann_str_and_line(mod.contents['f']) == ('str', 7)
+    assert ann_str_and_line(mod.contents['g']) == ('Optional[1, 2]', 8)
+    assert ann_str_and_line(mod.contents['h']) == ('list[str]', 9)
+
 @pytest.mark.parametrize('annotation', ("[", "pass", "1 ; 2"))
 @systemcls_param
 def test_bad_string_annotation(
@@ -1624,7 +1648,7 @@ def test_overload(systemcls: Type[model.System], capsys: CapSys) -> None:
     # Confirm decorators retained on overloads, docstring ignored for overloads,
     # and that overloads after the primary function are skipped
     mod = fromText("""
-        from typing import overload, Union
+        from typing import overload
         def dec(fn):
             pass
         @dec
