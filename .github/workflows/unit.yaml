@@ -3,7 +3,7 @@ name: Unit tests and release
 on:
   push:
     branches: [ master ]
-    tags: 
+    tags:
       - '*'
   pull_request:
     branches: [ master ]
@@ -23,10 +23,10 @@ jobs:
             python-version: 3.7
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -51,9 +51,17 @@ jobs:
         tox -e test-latest-twisted
 
     - name: Publish code coverage
-      continue-on-error: true
-      run: |
-        tox -e codecov
+      uses: codecov/codecov-action@v4
+      with:
+        fail_ci_if_error: true
+        files: ./coverage.xml
+        name: unit-${{ matrix.os }}-${{matrix.python-version}}
+        # Check the secret defined in GHA here
+        # https://github.com/twisted/pydoctor/settings/secrets/actions
+        # And get it from Codecov.io here
+        # https://app.codecov.io/gh/twisted/pydoctor/settings
+        token: ${{ secrets.CODECOV_TOKEN }}
+        verbose: true
 
   release:
 
@@ -61,13 +69,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: 3.9
-      
+
       - name: Log system information
         run: |
           test -r /etc/os-release && sh -c '. /etc/os-release && echo "OS: $PRETTY_NAME"'
