@@ -1132,6 +1132,9 @@ pre.constant-value              { padding: .5em; }
     background-color: rgb(253, 255, 223);
     box-shadow: 0px 0px 0px 7px rgb(253, 255, 223);
 }
+#summaryTree div {
+    display: inline-table;
+}
 
 /* deprecations uses a orange text */
 .rst-deprecated > .rst-versionmodified{
