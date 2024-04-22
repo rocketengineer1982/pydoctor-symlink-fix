@@ -1408,6 +1408,9 @@ def test_upgrade_annotation(systemcls: Type[model.System]) -> None:
     f: Union[(str,)]
     g: Optional[1, 2] # wrong, so we don't process it
     h: Union[list[str]]
+  
+    class List:
+        Union: Union[a, b]
     ''', systemcls=systemcls)
     assert ann_str_and_line(mod.contents['a']) == ('str | int', 2)
     assert ann_str_and_line(mod.contents['b']) == ('str | None', 3)
@@ -1417,6 +1420,7 @@ def test_upgrade_annotation(systemcls: Type[model.System]) -> None:
     assert ann_str_and_line(mod.contents['f']) == ('str', 7)
     assert ann_str_and_line(mod.contents['g']) == ('Optional[1, 2]', 8)
     assert ann_str_and_line(mod.contents['h']) == ('list[str]', 9)
+    assert ann_str_and_line(mod.contents['List'].contents['Union']) == ('a | b', 12)
 
 @pytest.mark.parametrize('annotation', ("[", "pass", "1 ; 2"))
 @systemcls_param

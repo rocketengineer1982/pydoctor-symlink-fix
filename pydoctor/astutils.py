@@ -115,11 +115,21 @@ def node2dottedname(node: Optional[ast.AST]) -> Optional[List[str]]:
     parts.reverse()
     return parts
 
-def node2fullname(expr: Optional[ast.AST], ctx: 'model.Documentable') -> Optional[str]:
+def node2fullname(expr: Optional[ast.AST], 
+                  ctx: model.Documentable | None = None, 
+                  *,
+                  expandName:Callable[[str], str] | None = None) -> Optional[str]:
+    if expandName is None:
+        if ctx is None:
+            raise TypeError('this function takes exactly two arguments')
+        expandName = ctx.expandName
+    elif ctx is not None:
+        raise TypeError('this function takes exactly two arguments')
+
     dottedname = node2dottedname(expr)
     if dottedname is None:
         return None
-    return ctx.expandName('.'.join(dottedname))
+    return expandName('.'.join(dottedname))
 
 def bind_args(sig: Signature, call: ast.Call) -> BoundArguments:
     """
@@ -294,7 +304,7 @@ class _UpgradeDeprecatedAnnotations(ast.NodeTransformer):
 
     def __init__(self, ctx: model.Documentable) -> None:
         def _node2fullname(node:ast.expr) -> str | None:
-            return node2fullname(node, ctx)
+            return node2fullname(node, expandName=ctx.expandAnnotationName)
         self.node2fullname = _node2fullname
 
     def _union_args_to_bitor(self, args: list[ast.expr], ctxnode:ast.AST) -> ast.BinOp:
@@ -358,6 +368,10 @@ DEPRECATED_TYPING_ALIAS_BUILTINS = {
         "typing.Set": 'set',
         "typing.FrozenSet": 'frozenset',
 }
+
+# These do not belong in the deprecated builtins aliases, so we make sure it doesn't happen.
+assert 'typing.Union' not in DEPRECATED_TYPING_ALIAS_BUILTINS
+assert 'typing.Optional' not in DEPRECATED_TYPING_ALIAS_BUILTINS
 
 TYPING_ALIAS = (
         "typing.Hashable",

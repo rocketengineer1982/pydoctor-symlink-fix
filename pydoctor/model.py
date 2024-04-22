@@ -346,6 +346,17 @@ class Documentable:
             obj = nxt
         return '.'.join([full_name] + parts[i + 1:])
 
+    def expandAnnotationName(self, name: str) -> str:
+        """
+        Like L{expandName} but gives precedence to the module scope when a 
+        name is defined both in the current scope and the module scope.
+        """
+        if self.module.isNameDefined(name):
+            return self.module.expandName(name)
+        elif self.isNameDefined(name):
+            return self.expandName(name)
+        return self.module.expandName(name)
+
     def resolveName(self, name: str) -> Optional['Documentable']:
         """Return the object named by "name" (using Python's lookup rules) in
         this context, if any is known to pydoctor."""
