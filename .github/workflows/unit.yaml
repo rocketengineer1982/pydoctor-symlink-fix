@@ -14,8 +14,8 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [pypy-3.7, 3.7, 3.8, 3.9, '3.10', 3.11, '3.12', '3.13.0-alpha.5']
-        os: [ubuntu-20.04]
+        python-version: [pypy-3.7, 3.7, 3.8, 3.9, '3.10', 3.11, '3.12', '3.13-dev']
+        os: [ubuntu-22.04]
         include:
           - os: windows-latest
             python-version: 3.11
