@@ -275,6 +275,11 @@ class _AnnotationStringParser(ast.NodeTransformer):
             slice = self.visit(node.slice)
         return ast.copy_location(ast.Subscript(value=value, slice=slice, ctx=node.ctx), node)
 
+    def visit_fast(self, node: ast.expr) -> ast.expr:
+        return node
+    
+    visit_Attribute = visit_Name = visit_fast
+
     # For Python >= 3.8:
 
     def visit_Constant(self, node: ast.Constant) -> ast.expr:
@@ -619,20 +624,20 @@ def _annotation_for_elements(sequence: Iterable[object]) -> Optional[ast.expr]:
         return None
 
       
-class Parentage(ast.NodeTransformer):
+class Parentage(ast.NodeVisitor):
     """
     Add C{parent} attribute to ast nodes instances.
     """
-    # stolen from https://stackoverflow.com/a/68845448
-    parent: Optional[ast.AST] = None
+    def __init__(self) -> None:
+        self.current: ast.AST | None = None
 
-    def visit(self, node: ast.AST) -> ast.AST:
-        setattr(node, 'parent', self.parent)
-        self.parent = node
-        node = super().visit(node)
-        if isinstance(node, ast.AST):
-            self.parent = getattr(node, 'parent')
-        return node
+    def generic_visit(self, node: ast.AST) -> None:
+        current = self.current
+        setattr(node, 'parent', current)
+        self.current = node
+        for child in ast.iter_child_nodes(node):
+            self.generic_visit(child)
+        self.current = current
 
 def get_parents(node:ast.AST) -> Iterator[ast.AST]:
     """
