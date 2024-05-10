@@ -230,7 +230,7 @@ ul ul ul ul ul ul ul {
 
 .fieldTable tr:not(.fieldStart) td:first-child,
 .valueTable tr:not(.fieldStart) td:first-child{
-    padding: 3px 4px 3px 10px;
+    padding: 3px 4px 3px 15px;
 }
 
 .fieldTable tr td {
@@ -246,14 +246,15 @@ ul ul ul ul ul ul ul {
 
 /* parameters names in parameters table */
 .fieldTable tr td.fieldArgContainer > .fieldArg {
-    display: inline;
+    float: left;
+    margin-left: -5px;
 }
 
 /* parameters types (in parameters table) */
 .fieldTable tr td.fieldArgContainer > code {
     /* we don't want word break for the types because we already add <wbr> tags inside the type HTML, and that should suffice. */
     word-break: normal;
-    display: inline-block;
+    display: inline;
     flex-wrap: wrap;
 }
 
