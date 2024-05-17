@@ -76,10 +76,18 @@ What's New?
 in development
 ^^^^^^^^^^^^^^
 
+pydoctor 24.3.3
+^^^^^^^^^^^^^^^
+
+* Fix release pipeline.
+
+pydoctor 24.3.0
+^^^^^^^^^^^^^^^
+
 This is the last major release to support Python 3.7.
 
 * Drop support for Python 3.6.
-* Add support for Python 3.12 and Python 3.13.
+* Add support for Python 3.12.
 * Astor is no longer a requirement starting at Python 3.9.
 * `ExtRegistrar.register_post_processor()` now supports a `priority` argument that is an int.
   Highest priority callables will be called first during post-processing.
