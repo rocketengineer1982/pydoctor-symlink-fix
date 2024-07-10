@@ -97,7 +97,8 @@ class TemplateWriter(IWriter):
         T = time.time()
         search.write_lunr_index(self.build_directory, system=system)
         system.msg('html', "took %fs"%(time.time() - T), wantsnl=False)
-
+    
+    def writeIndexPage(self, system: model.System) -> None:
         if len(system.root_names) == 1:
             # If there is just a single root module it is written to index.html to produce nicer URLs.
             # To not break old links we also create a symlink from the full module name to the index.html
@@ -107,7 +108,7 @@ class TemplateWriter(IWriter):
                 root_module_path.unlink()
                 # not using missing_ok=True because that was only added in Python 3.8 and we still support Python 3.6
             except FileNotFoundError:
-                pass
+                system.msg('file not found:', root_module_path)
             root_module_path.symlink_to('index.html')
 
     def _writeDocsFor(self, ob: model.Documentable) -> None:
