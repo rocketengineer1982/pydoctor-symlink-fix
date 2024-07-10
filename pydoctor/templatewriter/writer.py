@@ -108,7 +108,7 @@ class TemplateWriter(IWriter):
                 root_module_path.unlink()
                 # not using missing_ok=True because that was only added in Python 3.8 and we still support Python 3.6
             except FileNotFoundError:
-                system.msg('file not found:', root_module_path)
+                pass
             root_module_path.symlink_to('index.html')
 
     def _writeDocsFor(self, ob: model.Documentable) -> None:
