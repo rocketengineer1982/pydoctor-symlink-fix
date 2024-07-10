@@ -98,7 +98,7 @@ class TemplateWriter(IWriter):
         search.write_lunr_index(self.build_directory, system=system)
         system.msg('html', "took %fs"%(time.time() - T), wantsnl=False)
     
-    def writeIndexPage(self, system: model.System) -> None:
+    def writeIndexSymlink(self, system: model.System) -> None:
         if len(system.root_names) == 1:
             # If there is just a single root module it is written to index.html to produce nicer URLs.
             # To not break old links we also create a symlink from the full module name to the index.html
