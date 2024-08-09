@@ -110,7 +110,8 @@ class TemplateWriter(IWriter):
                 # not using missing_ok=True because that was only added in Python 3.8 and we still support Python 3.6
             except FileNotFoundError:
                 pass
-            shutil.copy(root_module_path, 'index.html')
+            hardlink_path = (self.build_directory / 'index.html')
+            shutil.copy(hardlink_path, root_module_path)
 
     def _writeDocsFor(self, ob: model.Documentable) -> None:
         if not ob.isVisible:
