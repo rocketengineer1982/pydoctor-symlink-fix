@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import itertools
 from pathlib import Path
+import shutil
 from typing import IO, Iterable, Type, TYPE_CHECKING
 
 from pydoctor import model
@@ -98,10 +99,10 @@ class TemplateWriter(IWriter):
         search.write_lunr_index(self.build_directory, system=system)
         system.msg('html', "took %fs"%(time.time() - T), wantsnl=False)
     
-    def writeIndexSymlink(self, system: model.System) -> None:
+    def writeIndexHardlink(self, system: model.System) -> None:
         if len(system.root_names) == 1:
             # If there is just a single root module it is written to index.html to produce nicer URLs.
-            # To not break old links we also create a symlink from the full module name to the index.html
+            # To not break old links we also create a hardlink from the full module name to the index.html
             # file. This is also good for consistency: every module is accessible by <full module name>.html
             root_module_path = (self.build_directory / (list(system.root_names)[0] + '.html'))
             try:
@@ -109,7 +110,7 @@ class TemplateWriter(IWriter):
                 # not using missing_ok=True because that was only added in Python 3.8 and we still support Python 3.6
             except FileNotFoundError:
                 pass
-            root_module_path.symlink_to('index.html')
+            shutil.copy(root_module_path, 'index.html')
 
     def _writeDocsFor(self, ob: model.Documentable) -> None:
         if not ob.isVisible:

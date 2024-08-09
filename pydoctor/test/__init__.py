@@ -71,7 +71,7 @@ class InMemoryWriter(IWriter):
         """
         system.options.makeintersphinx = False
     
-    def writeIndexSymlink(self, system: model.System) -> None:
+    def writeIndexHardlink(self, system: model.System) -> None:
         """
         Does nothing.
         """

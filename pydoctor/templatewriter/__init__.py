@@ -73,10 +73,10 @@ class IWriter(Protocol):
 
     def writeIndividualFiles(self, obs: Iterable[Documentable]) -> None:
         """
-        Called last.
+        Called third.
         """
     
-    def writeIndexSymlink(self, system: System) -> None:
+    def writeIndexHardlink(self, system: System) -> None:
         """
         Called after writeIndividualFiles when option --html-subject is not used.
         """
