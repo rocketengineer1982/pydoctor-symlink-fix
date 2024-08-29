@@ -76,7 +76,7 @@ class IWriter(Protocol):
         Called third.
         """
     
-    def writeIndexHardlink(self, system: System) -> None:
+    def writeLinks(self, system: System) -> None:
         """
         Called after writeIndividualFiles when option --html-subject is not used.
         """
