@@ -113,7 +113,7 @@ class TemplateWriter(IWriter):
                     # to jump directly to the hardlink part.
                     raise OSError()
                 root_module_path.symlink_to('index.html')
-            except OSError:
+            except (OSError, NotImplementedError): # symlink is not implemented for windows on pypy :/ 
                 hardlink_path = (self.build_directory / 'index.html')
                 shutil.copy(hardlink_path, root_module_path)
 
