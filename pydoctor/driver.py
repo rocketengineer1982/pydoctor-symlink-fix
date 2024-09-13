@@ -130,7 +130,7 @@ def make(system: model.System) -> None:
                 subjects = system.rootobjects
         writer.writeIndividualFiles(subjects)
         if not options.htmlsubjects:
-            writer.writeIndexHardlink(system)
+            writer.writeLinks(system)
         
     if options.makeintersphinx:
         if not options.makehtml:
